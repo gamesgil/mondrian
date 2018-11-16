@@ -7,7 +7,7 @@ table {
 }
 
 td {
-    border: 1px solid black;
+    border: 2px solid black;
     width: var(--size);
     height: var(--size);
 }
@@ -18,4 +18,12 @@ td.open-left {
 
 td.open-right {
     border-right: none;
+}
+
+td.open-top {
+    border-top: none;
+}
+
+td.open-bottom {
+    border-bottom: none;
 }
