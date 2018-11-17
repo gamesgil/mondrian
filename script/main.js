@@ -1,4 +1,3 @@
-const regions = []
 const occupied = []
 const width = 20
 const height = 10
@@ -23,7 +22,7 @@ const drawTable = _ => {
         }
     }
     
-    document.body.appendChild(table)
+    document.body.insertBefore(table, document.body.children[0])
 }
 
 const getRandom = (from, to) => {
@@ -106,8 +105,17 @@ const createRegion = _ => {
     }
 }
 
+const generate = _ => {
+    for (let i = 0; i < width * height; i++) {
+        createRegion()
+    }
+}
+
+document.querySelector('button').addEventListener('click', _ => location.reload())
+
 drawTable()
+generate()
 
 
-for (let i = 0; i < width * height; i++)
-    createRegion()
+
+

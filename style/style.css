@@ -2,6 +2,14 @@
     --size: 50px;
 }
 
+button {
+    width: 120px;
+    height: 40px;
+    font-size: 1.25rem;
+
+    margin-top: 50px;
+}
+
 table {
     border-collapse: collapse;
 }
