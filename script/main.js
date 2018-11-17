@@ -1,9 +1,9 @@
 const regions = []
 const occupied = []
-const width = 10
+const width = 20
 const height = 10
-const maxSize = 4
-const colors = ['red', 'green', 'blue', 'yellow', 'purple', 'beige', 'cyan']
+const maxSize = Math.min(width, height) / 2
+const colors = ['rgb(245,197,39)', 'white', 'rgb(231,51,60)', 'rgb(60,73,152)', 'white', 'black', 'white', 'rgb(245,197,39)', 'white', 'rgb(231,51,60)', 'rgb(60,73,152)']
 
 const drawTable = _ => {
     const table = document.createElement('table')
@@ -45,21 +45,22 @@ const createRegion = _ => {
     }
 
     if (foundCell > -1) {
-        const maxSteps = getRandom(1, maxSize)
+        let maxStepsX = getRandom(1, maxSize)
+        const maxStepsY = getRandom(1, maxSize)
         const localOccupied = []
 
 
-        for (let i = 0; i < maxSteps; i++) {
+        for (let i = 0; i < maxStepsY; i++) {
             let xSteps = 0
     
             // break right
-            while(xSteps < maxSteps && ((foundCell + xSteps) % width) < width) {
-                if (occupied.includes(foundCell + xSteps) || foundCell + xSteps >= width * height) {
-                    return
+            while(xSteps < maxStepsX && ((foundCell + xSteps) % width) < width) {
+                if (occupied.includes(foundCell + xSteps) || (foundCell + xSteps) >= (width * height)) {
+                    maxStepsX = xSteps
+                    break
                 }
 
                 localOccupied.push(foundCell + xSteps)
-    
                 if ((foundCell + xSteps) % width) {
                     if ((foundCell + xSteps) % width && !occupied.includes(foundCell + xSteps - 1)) {
                         getCell(foundCell + xSteps).classList.add('open-left')                
@@ -67,8 +68,9 @@ const createRegion = _ => {
                 } 
                 
                 if (((foundCell + xSteps) % width) < width - 1 &&
-                    (xSteps < maxSteps - 1) &&
+                    (xSteps < maxStepsX - 1) &&
                     !occupied.includes((foundCell + xSteps + 1))) {
+
                     getCell(foundCell + xSteps).classList.add('open-right')
                 }
 
@@ -76,24 +78,28 @@ const createRegion = _ => {
                     getCell(foundCell + xSteps).classList.add('open-top')
                 }
 
-                if (i < maxSize - 1) {
+                if (i < maxStepsY - 1) {
                     if (Math.floor((foundCell + xSteps) / width) < height - 1) {
                         getCell(foundCell + xSteps).classList.add('open-bottom')
                     }
                 }
     
-                getCell(foundCell).innerHTML = xSteps + ',' + maxSteps
-
+                
+                // getCell(foundCell + xSteps).innerHTML = `${xSteps},${maxStepsX},${maxStepsY}`
                 getCell(foundCell + xSteps).style.background = colors[0]
 
                 xSteps++
             }
 
-            foundCell += width
+            if (foundCell + width < width * height) {
+                foundCell += width
+            } else {
+                break
+            }
         }
 
         while (localOccupied.length) {
-            occupied.push(localOccupied.pop())
+            occupied.push(localOccupied.shift())
         }
 
         colors.unshift(colors.pop())
@@ -103,7 +109,5 @@ const createRegion = _ => {
 drawTable()
 
 
-for (let i = 0; i < 150; i++)
+for (let i = 0; i < width * height; i++)
     createRegion()
-
-console.log(occupied)
